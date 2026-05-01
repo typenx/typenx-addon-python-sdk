@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "typenx-addon-python-sdk"
+version = "0.1.0"
+description = "Python SDK for building Typenx metadata addons."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Typenx" }]
+keywords = ["typenx", "addon", "anime", "metadata", "python"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+
+[project.urls]
+Repository = "https://github.com/typenx/typenx-addon-python-sdk"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/typenx_addon_python_sdk"]
