@@ -1,10 +1,10 @@
 # Typenx Addon Python SDK
 
-Python SDK for building Typenx addons.
+The Python SDK for building Typenx addons.
 
-Typenx addons are remote HTTP services. Metadata addons provide catalog, search, and anime metadata. Video addons can also opt into `video_sources` and return episode stream URLs.
+Typenx addons are remote HTTP services with a typed schema. Metadata addons return catalogs, search results, and anime metadata. Video addons can additionally opt into the `video_sources` resource and return episode stream URLs they control. Once the service is running and registered, [Typenx Core](https://github.com/typenx/typenx-core) treats it as a first-class source — no rebuild, no plugin folder, no special deploy.
 
-Use this SDK when you want to plug a new provider, catalog, recommendation source, or user-controlled video library into Typenx. If you like addon-first self-hosted anime tools, star [typenx-core](https://github.com/typenx/typenx-core).
+This SDK ships the manifest types, request/response models, an HTTP server, and a couple of helpers (including a season-centralization utility for providers that split shows across multiple records) so you can stand up a working addon in a single file.
 
 ## Install
 
@@ -12,7 +12,7 @@ Use this SDK when you want to plug a new provider, catalog, recommendation sourc
 pip install typenx-addon-python-sdk
 ```
 
-## Example
+## A minimal addon
 
 ```python
 from datetime import datetime, timezone
@@ -110,9 +110,11 @@ addon = create_typenx_addon(
 serve_typenx_addon(addon)
 ```
 
+That's a complete addon. Run it, register the URL with Typenx Core, and it shows up in catalogs and search.
+
 ## Centralizing split seasons
 
-MAL, Kitsu, and AniList often return separate records for each season of one show. The SDK includes helpers for addon authors that want to present those as one centralized show:
+MyAnimeList, Kitsu, and AniList often return separate records for each season of one show — *Attack on Titan*, *Attack on Titan Season 2*, *Attack on Titan: The Final Season*, and so on. The SDK includes helpers for addon authors who want to present those as one centralized show:
 
 ```python
 from typenx_addon_python_sdk import centralize_seasons, combine_anime_seasons
@@ -121,7 +123,7 @@ search_items = centralize_seasons(provider_search_items)
 show = combine_anime_seasons([season_one_meta, season_two_meta, season_three_meta])
 ```
 
-`centralize_seasons()` keeps the normal preview fields and adds `season_entries`, so your addon can fetch each source season and pass the metadata into `combine_anime_seasons()`.
+`centralize_seasons()` keeps the normal preview fields and adds `season_entries`, so your addon can fetch each source season and pass the metadata into `combine_anime_seasons()` to produce a single show with merged episode numbering.
 
 ## Routes
 
@@ -131,3 +133,5 @@ show = combine_anime_seasons([season_one_meta, season_two_meta, season_three_met
 - `POST /search`
 - `GET /anime/:id`
 - `POST /videos`
+
+The [TypeScript](https://github.com/typenx/typenx-addon-TS-sdk) and [Rust](https://github.com/typenx/typenx-addon-rust-sdk) SDKs speak the same protocol; pick whichever language fits the source you're wrapping.
