@@ -4,6 +4,8 @@ Python SDK for building Typenx addons.
 
 Typenx addons are remote HTTP services. Metadata addons provide catalog, search, and anime metadata. Video addons can also opt into `video_sources` and return episode stream URLs.
 
+Use this SDK when you want to plug a new provider, catalog, recommendation source, or user-controlled video library into Typenx. If you like addon-first self-hosted anime tools, star [typenx-core](https://github.com/typenx/typenx-core).
+
 ## Install
 
 ```bash
