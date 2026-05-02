@@ -46,7 +46,9 @@ class SearchRequest(TypedDict):
 class VideoSourceRequest(TypedDict):
     anime_id: str
     addon_id: NotRequired[str]
+    anime_title: NotRequired[str | None]
     episode_id: NotRequired[str | None]
+    episode_title: NotRequired[str | None]
     episode_number: NotRequired[int | None]
     season_number: NotRequired[int | None]
 
