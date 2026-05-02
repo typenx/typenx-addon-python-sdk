@@ -43,6 +43,15 @@ class SearchRequest(TypedDict):
     limit: NotRequired[int]
 
 
+class SeasonEntry(TypedDict):
+    id: str
+    title: str
+    season_number: int | None
+    year: int | None
+    episode_count: int | None
+    source: NotRequired[str | None]
+
+
 class AnimePreview(TypedDict):
     id: str
     title: str
@@ -52,6 +61,7 @@ class AnimePreview(TypedDict):
     score: NotRequired[float | None]
     year: int | None
     content_type: ContentType
+    season_entries: NotRequired[list[SeasonEntry]]
 
 
 class CatalogResponse(TypedDict):

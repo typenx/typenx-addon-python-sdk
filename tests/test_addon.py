@@ -121,6 +121,18 @@ class TypenxAddonTests(unittest.TestCase):
             [1, 1, 2],
         )
 
+    def test_combine_anime_seasons_avoids_unnamed_season_number_collisions(self):
+        first = self._metadata("aot-1", "Attack on Titan", 2013, 1)
+        third = self._metadata("aot-3", "Attack on Titan Season 3", 2018, 1)
+        final = self._metadata("aot-final", "Attack on Titan Final Season", 2021, 1)
+
+        combined = combine_anime_seasons([final, third, first])
+
+        self.assertEqual(
+            [episode["season_number"] for episode in combined["episodes"]],
+            [1, 3, 4],
+        )
+
     def test_base_show_title_removes_common_season_suffixes(self):
         self.assertEqual(base_show_title("Mob Psycho 100 III"), "Mob Psycho 100 III")
         self.assertEqual(base_show_title("Attack on Titan Final Season"), "Attack on Titan")

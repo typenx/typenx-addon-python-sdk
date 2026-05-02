@@ -2,7 +2,6 @@ from .addon import TypenxAddon, create_typenx_addon, json_response
 from .server import serve_typenx_addon
 from .seasons import (
     CentralizedAnimePreview,
-    SeasonEntry,
     base_show_title,
     centralize_seasons,
     combine_anime_seasons,
@@ -23,6 +22,7 @@ from .types import (
     EpisodeMetadata,
     ExternalLink,
     SearchRequest,
+    SeasonEntry,
     StaffCredit,
 )
 

@@ -2,17 +2,9 @@ from __future__ import annotations
 
 import re
 from copy import deepcopy
-from typing import NotRequired, TypedDict, cast
+from typing import NotRequired, cast
 
-from .types import AnimeMetadata, AnimePreview, EpisodeMetadata
-
-
-class SeasonEntry(TypedDict):
-    id: str
-    title: str
-    season_number: int | None
-    year: int | None
-    episode_count: int | None
+from .types import AnimeMetadata, AnimePreview, EpisodeMetadata, SeasonEntry
 
 
 class CentralizedAnimePreview(AnimePreview):
@@ -171,8 +163,14 @@ def unique_strings(values) -> list[str]:
 
 def _combined_episodes(seasons: list[AnimeMetadata]) -> list[EpisodeMetadata]:
     episodes: list[EpisodeMetadata] = []
-    for index, season in enumerate(seasons, start=1):
-        season_number = season_number_of(season["title"]) or index
+    used_season_numbers: set[int] = set()
+    for season in seasons:
+        explicit_season_number = season_number_of(season["title"])
+        if explicit_season_number is not None:
+            season_number = explicit_season_number
+        else:
+            season_number = next_later_season_number(used_season_numbers)
+        used_season_numbers.add(season_number)
         for episode in season.get("episodes", []):
             merged = deepcopy(episode)
             merged["anime_id"] = "central:" + ",".join(item["id"] for item in seasons)
@@ -180,3 +178,7 @@ def _combined_episodes(seasons: list[AnimeMetadata]) -> list[EpisodeMetadata]:
             merged["id"] = f'{season["id"]}:{episode["id"]}'
             episodes.append(merged)
     return episodes
+
+
+def next_later_season_number(used: set[int]) -> int:
+    return max(used, default=0) + 1
