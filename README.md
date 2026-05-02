@@ -94,6 +94,19 @@ addon = create_typenx_addon(
 serve_typenx_addon(addon)
 ```
 
+## Centralizing split seasons
+
+MAL, Kitsu, and AniList often return separate records for each season of one show. The SDK includes helpers for addon authors that want to present those as one centralized show:
+
+```python
+from typenx_addon_python_sdk import centralize_seasons, combine_anime_seasons
+
+search_items = centralize_seasons(provider_search_items)
+show = combine_anime_seasons([season_one_meta, season_two_meta, season_three_meta])
+```
+
+`centralize_seasons()` keeps the normal preview fields and adds `season_entries`, so your addon can fetch each source season and pass the metadata into `combine_anime_seasons()`.
+
 ## Routes
 
 - `GET /health`
