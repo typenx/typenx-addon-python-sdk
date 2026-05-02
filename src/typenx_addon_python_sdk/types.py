@@ -61,6 +61,7 @@ class AnimePreview(TypedDict):
     score: NotRequired[float | None]
     year: int | None
     content_type: ContentType
+    genres: NotRequired[list[str]]
     season_entries: NotRequired[list[SeasonEntry]]
 
 
