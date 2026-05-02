@@ -8,7 +8,15 @@ from dataclasses import dataclass
 from typing import Any
 from urllib.parse import unquote, urlparse
 
-from .types import AddonHealth, AddonManifest, AnimeMetadata, CatalogRequest, CatalogResponse, SearchRequest
+from .types import (
+    AddonHealth,
+    AddonManifest,
+    AnimeMetadata,
+    CatalogRequest,
+    CatalogResponse,
+    SearchRequest,
+    VideoSourceRequest,
+)
 
 JsonObject = dict[str, Any]
 MaybeAwaitable = Awaitable[Any] | Any
@@ -16,6 +24,7 @@ HealthHandler = Callable[[], MaybeAwaitable]
 CatalogHandler = Callable[[CatalogRequest], MaybeAwaitable]
 SearchHandler = Callable[[SearchRequest], MaybeAwaitable]
 AnimeHandler = Callable[[str], MaybeAwaitable]
+VideoSourcesHandler = Callable[[VideoSourceRequest], MaybeAwaitable]
 
 
 @dataclass(frozen=True)
@@ -32,6 +41,7 @@ class TypenxAddon:
     catalog_handler: CatalogHandler
     search_handler: SearchHandler
     anime_handler: AnimeHandler
+    videos_handler: VideoSourcesHandler | None = None
 
     def handle(self, method: str, url: str, body: bytes | str | None = None) -> Response:
         path = _strip_trailing_slash(urlparse(url).path or "/")
@@ -54,6 +64,11 @@ class TypenxAddon:
                 anime_id = unquote(path[len("/anime/") :])
                 return json_response(_resolve(self.anime_handler(anime_id)))
 
+            if method == "POST" and path == "/videos":
+                if not self.videos_handler:
+                    return json_response({"message": "Video sources are not supported"}, status=404)
+                return json_response(_resolve(self.videos_handler(_read_json(body))))
+
             return json_response({"message": "Not found"}, status=404)
         except Exception as error:
             return json_response({"message": str(error) or "Addon failed"}, status=500)
@@ -70,6 +85,7 @@ def create_typenx_addon(
         catalog_handler=_required_handler(handlers, "catalog"),
         search_handler=_required_handler(handlers, "search"),
         anime_handler=_required_handler(handlers, "anime"),
+        videos_handler=handlers.get("videos"),
     )
 
 

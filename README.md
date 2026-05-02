@@ -1,8 +1,8 @@
 # Typenx Addon Python SDK
 
-Python SDK for building Typenx metadata addons.
+Python SDK for building Typenx addons.
 
-Typenx addons are remote HTTP services. They provide catalog, search, and anime metadata only. They do not return stream URLs or host media.
+Typenx addons are remote HTTP services. Metadata addons provide catalog, search, and anime metadata. Video addons can also opt into `video_sources` and return episode stream URLs.
 
 ## Install
 
@@ -37,7 +37,7 @@ addon = create_typenx_addon(
         "version": "0.1.0",
         "description": "Metadata addon backed by my anime catalog service.",
         "icon": "https://typenx.dev/addon-icon.png",
-        "resources": ["catalog", "search", "anime_meta"],
+        "resources": ["catalog", "search", "anime_meta", "video_sources"],
         "catalogs": [
             {"id": "popular", "name": "Popular", "content_type": "anime", "filters": []}
         ],
@@ -88,6 +88,20 @@ addon = create_typenx_addon(
             "episodes": [],
             "updated_at": datetime.now(timezone.utc).isoformat(),
         },
+        "videos": lambda request: {
+            "streams": [
+                {
+                    "id": f"{request['anime_id']}-{request.get('episode_number') or request.get('episode_id')}-720p",
+                    "title": "720p",
+                    "url": "https://cdn.example/anime/episode-1.mp4",
+                    "quality": "720p",
+                    "format": "mp4",
+                    "audio_language": "ja",
+                    "headers": [],
+                }
+            ],
+            "subtitles": [],
+        },
     },
 )
 
@@ -114,3 +128,4 @@ show = combine_anime_seasons([season_one_meta, season_two_meta, season_three_met
 - `POST /catalog`
 - `POST /search`
 - `GET /anime/:id`
+- `POST /videos`

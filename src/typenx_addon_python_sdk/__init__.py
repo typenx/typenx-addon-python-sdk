@@ -24,6 +24,11 @@ from .types import (
     SearchRequest,
     SeasonEntry,
     StaffCredit,
+    VideoHeader,
+    VideoSourceRequest,
+    VideoSourceResponse,
+    VideoStream,
+    VideoSubtitle,
 )
 
 __all__ = [
@@ -41,6 +46,11 @@ __all__ = [
     "ExternalLink",
     "SearchRequest",
     "StaffCredit",
+    "VideoHeader",
+    "VideoSourceRequest",
+    "VideoSourceResponse",
+    "VideoStream",
+    "VideoSubtitle",
     "CentralizedAnimePreview",
     "SeasonEntry",
     "TypenxAddon",

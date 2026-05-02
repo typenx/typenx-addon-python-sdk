@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal, NotRequired, TypedDict
 
-AddonResource = Literal["catalog", "search", "anime_meta", "episode_meta"]
+AddonResource = Literal["catalog", "search", "anime_meta", "episode_meta", "video_sources"]
 ContentType = Literal["anime", "movie", "ova", "ona", "special"]
 
 
@@ -41,6 +41,42 @@ class SearchRequest(TypedDict):
     query: str
     addon_id: NotRequired[str]
     limit: NotRequired[int]
+
+
+class VideoSourceRequest(TypedDict):
+    anime_id: str
+    addon_id: NotRequired[str]
+    episode_id: NotRequired[str | None]
+    episode_number: NotRequired[int | None]
+    season_number: NotRequired[int | None]
+
+
+class VideoHeader(TypedDict):
+    name: str
+    value: str
+
+
+class VideoStream(TypedDict):
+    id: str
+    title: NotRequired[str | None]
+    url: str
+    quality: NotRequired[str | None]
+    format: NotRequired[str | None]
+    audio_language: NotRequired[str | None]
+    headers: list[VideoHeader]
+
+
+class VideoSubtitle(TypedDict):
+    id: str
+    label: str
+    language: NotRequired[str | None]
+    url: str
+    format: NotRequired[str | None]
+
+
+class VideoSourceResponse(TypedDict):
+    streams: list[VideoStream]
+    subtitles: NotRequired[list[VideoSubtitle]]
 
 
 class SeasonEntry(TypedDict):
