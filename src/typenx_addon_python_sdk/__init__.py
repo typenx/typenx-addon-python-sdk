@@ -12,7 +12,9 @@ from .types import (
     CatalogResponse,
     ContentType,
     EpisodeMetadata,
+    ExternalLink,
     SearchRequest,
+    StaffCredit,
 )
 
 __all__ = [
@@ -27,7 +29,9 @@ __all__ = [
     "CatalogResponse",
     "ContentType",
     "EpisodeMetadata",
+    "ExternalLink",
     "SearchRequest",
+    "StaffCredit",
     "TypenxAddon",
     "create_typenx_addon",
     "json_response",
